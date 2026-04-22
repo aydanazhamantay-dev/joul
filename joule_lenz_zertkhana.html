@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Виртуалды зертхана — Джоуль-Ленц заңы | 8-сынып Физика</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fira+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1c2333;
+    --border: rgba(255,255,255,0.07);
+    --text: #e2e8f0;
+    --text2: #8896aa;
+    --blue: #60a5fa;
+    --blue-dim: #1e3a5f;
+    --amber: #fbbf24;
+    --amber-dim: #451a03;
+    --red: #f87171;
+    --red-dim: #450a0a;
+    --teal: #34d399;
+    --teal-dim: #064e3b;
+    --purple: #a78bfa;
+    --purple-dim: #2e1065;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; min-height: 100vh; }
+
+  header { background: linear-gradient(135deg, #0a0e1a, #0f1e35, #1a0a0e); padding: 28px 32px 22px; border-bottom: 1px solid var(--border); }
+  .badge-h { display: inline-block; background: rgba(96,165,250,0.12); color: var(--blue); border: 1px solid rgba(96,165,250,0.25); border-radius: 20px; padding: 3px 12px; font-size: 12px; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.5px; }
+  header h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  header p { font-size: 14px; color: var(--text2); font-weight: 600; }
+
+  main { padding: 20px; max-width: 980px; margin: 0 auto; }
+
+  .guide-block { background: #fff; color: #1a1a2e; border-radius: var(--radius); padding: 22px 24px; margin-bottom: 16px; }
+  .g-title { font-size: 15px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+  .g-desc { font-size: 14px; color: #444; line-height: 1.7; margin-bottom: 16px; border-left: 3px solid #60a5fa; padding-left: 12px; }
+  .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width:600px){ .guide-grid { grid-template-columns: 1fr; } }
+  .guide-section { background: #f5f7fa; border-radius: 10px; padding: 14px 16px; }
+  .guide-section h3 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #1a4a7a; margin-bottom: 10px; }
+  .guide-section ol { padding-left: 18px; }
+  .guide-section li { font-size: 13px; color: #333; line-height: 1.8; }
+  .q-list { counter-reset: qc; padding-left: 0 !important; list-style: none !important; }
+  .q-list li { counter-increment: qc; font-size: 13px; color: #333; line-height: 1.8; }
+  .q-list li::before { content: counter(qc) ". "; font-weight: 700; color: #1a4a7a; }
+  .answer-box { width: 100%; margin-top: 10px; border: 1px solid #d0d7de; border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: 'Nunito', sans-serif; color: #1a1a2e; resize: vertical; min-height: 80px; background: #fff; }
+  .forms-btn { display: block; margin-top: 12px; background: #1a4a7a; color: #fff; text-align: center; padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none; }
+
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 14px; }
+  .panel-title { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text2); margin-bottom: 14px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  @media(max-width:620px){ .grid2 { grid-template-columns: 1fr; } }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  @media(max-width:620px){ .grid3 { grid-template-columns: 1fr 1fr; } }
+
+  .sl-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .sl-lbl { font-size: 13px; color: var(--text2); font-weight: 600; white-space: nowrap; min-width: 100px; }
+  input[type=range] { flex: 1; -webkit-appearance: none; height: 4px; border-radius: 2px; background: var(--surface2); outline: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--blue); cursor: pointer; border: 2px solid var(--bg); }
+  .sl-val { font-size: 14px; font-weight: 700; min-width: 65px; text-align: right; }
+
+  .stat { background: var(--surface2); border-radius: var(--radius-sm); padding: 12px 14px; border: 1px solid var(--border); }
+  .stat .s-lbl { font-size: 11px; color: var(--text2); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .stat .s-val { font-size: 20px; font-weight: 800; }
+
+  canvas { display: block; border-radius: var(--radius-sm); border: 1px solid var(--border); margin: 0 auto; }
+  .canvas-wrap p { font-size: 12px; color: var(--text2); margin-top: 8px; font-weight: 600; text-align: center; }
+
+  .formula-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  @media(max-width:620px){ .formula-grid { grid-template-columns: 1fr; } }
+  .formula-box { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; }
+  .formula-box .f-lbl { font-size: 11px; color: var(--text2); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .formula-box .f-eq { font-family: 'Fira Mono', monospace; font-size: 14px; color: var(--blue); margin-bottom: 6px; }
+  .formula-box .f-val { font-size: 16px; font-weight: 800; color: var(--amber); }
+
+  .temp-bar-bg { background: var(--surface2); border-radius: 6px; height: 18px; overflow: hidden; border: 1px solid var(--border); margin: 8px 0; }
+  .temp-bar-fill { height: 100%; border-radius: 6px; transition: width 0.4s, background 0.4s; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 11px; font-weight: 700; color: #fff; min-width: 30px; }
+
+  .material-btn { padding: 7px 14px; border: 1px solid var(--border); background: var(--surface2); color: var(--text2); border-radius: var(--radius-sm); font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; margin: 3px; transition: all 0.2s; }
+  .material-btn.active { background: var(--blue-dim); color: var(--blue); border-color: rgba(96,165,250,0.3); }
+
+  .info-panel { background: linear-gradient(135deg, #0a0e1a, #0f1e35); border: 1px solid rgba(96,165,250,0.15); border-radius: var(--radius); padding: 16px 20px; font-size: 14px; line-height: 1.7; color: #a8bcd0; margin-bottom: 14px; }
+  .info-panel strong { color: var(--blue); }
+
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th { background: var(--surface2); color: var(--text2); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-size: 11px; padding: 10px 14px; text-align: left; }
+  .data-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr.active-row td { background: rgba(96,165,250,0.08); color: var(--blue); font-weight: 700; }
+  .hl { color: var(--amber); font-weight: 700; font-family: 'Fira Mono', monospace; }
+
+  footer { text-align: center; padding: 20px; font-size: 12px; color: var(--text2); border-top: 1px solid var(--border); margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge-h">8-СЫНЫП · ФИЗИКА</div>
+  <h1>⚡ Виртуалды зертхана</h1>
+  <p>Электр тогының жұмысы мен қуаты · Токтың жылулық әрекеті · Джоуль-Ленц заңы</p>
+</header>
+
+<main>
+
+  <div class="guide-block">
+    <div class="g-title">🎯 Зертханалық жұмыс мақсаты</div>
+    <div class="g-desc">Электр тогының жұмысын (A = UIt), қуатын (P = UI) және Джоуль-Ленц заңы бойынша бөлінетін жылуды (Q = I²Rt) зерттеу. Кедергі, ток күші және кернеудің жылу бөлінуіне әсерін анықтау.</div>
+    <div class="guide-grid">
+      <div class="guide-section">
+        <h3>📋 Жұмыс қадамдары</h3>
+        <ol>
+          <li>Өткізгіш материалын таңдаңыз</li>
+          <li>Кернеу U және кедергі R реттеңіз</li>
+          <li>Ток күші I автоматты есептеледі (I = U/R)</li>
+          <li>Қуат P = UI мәнін бақылаңыз</li>
+          <li>Уақытты өзгертіп, Q = I²Rt есептеңіз</li>
+          <li>Нәтижелерді кестеге жазып салыстырыңыз</li>
+        </ol>
+      </div>
+      <div class="guide-section">
+        <h3>❓ Тапсырма сұрақтары</h3>
+        <ul class="q-list">
+          <li>Ток күші екі есе артса, жылу мөлшері қалай өзгереді?</li>
+          <li>Джоуль-Ленц заңы нені білдіреді?</li>
+          <li>Электр тогының жұмысы мен қуатының айырмашылығы неде?</li>
+          <li>Қандай өткізгіш көп жылу бөледі — үлкен кедергілі ме, кішісі ме?</li>
+        </ul>
+        <textarea class="answer-box" placeholder="Жауаптарыңызды осында жазыңыз..."></textarea>
+        <a class="forms-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfJeJFfXBpYHLPLiw3k_Y9jg169qw-Oh5AKyZiEygxkjdVT9Q/viewform" target="_blank">📝 Жауаптарды Google Forms-қа жіберу ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-title">Өткізгіш материалы</div>
+      <div style="margin-bottom:12px;">
+        <button class="material-btn active" onclick="setMaterial('nichrome')">Нихром</button>
+        <button class="material-btn" onclick="setMaterial('copper')">Мыс</button>
+        <button class="material-btn" onclick="setMaterial('iron')">Темір</button>
+        <button class="material-btn" onclick="setMaterial('tungsten')">Вольфрам</button>
+      </div>
+      <div class="sl-row">
+        <span class="sl-lbl">Кернеу U (В)</span>
+        <input type="range" id="voltage" min="1" max="220" step="1" value="12">
+        <span class="sl-val" id="v-out" style="color:var(--blue);">12 В</span>
+      </div>
+      <div class="sl-row">
+        <span class="sl-lbl">Кедергі R (Ом)</span>
+        <input type="range" id="resistance" min="1" max="100" step="1" value="10">
+        <span class="sl-val" id="r-out" style="color:var(--purple);">10 Ом</span>
+      </div>
+      <div class="sl-row">
+        <span class="sl-lbl">Уақыт t (с)</span>
+        <input type="range" id="time" min="1" max="300" step="1" value="60">
+        <span class="sl-val" id="t-out" style="color:var(--text2);">60 с</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Негізгі шамалар</div>
+      <div class="grid3">
+        <div class="stat">
+          <div class="s-lbl">Ток I (А)</div>
+          <div class="s-val" id="current" style="color:var(--amber);">1.20</div>
+        </div>
+        <div class="stat">
+          <div class="s-lbl">Қуат P (Вт)</div>
+          <div class="s-val" id="power" style="color:var(--red);">14.4</div>
+        </div>
+        <div class="stat">
+          <div class="s-lbl">Жұмыс A (Дж)</div>
+          <div class="s-val" id="work" style="color:var(--teal);">864</div>
+        </div>
+        <div class="stat">
+          <div class="s-lbl">Жылу Q (Дж)</div>
+          <div class="s-val" id="heat" style="color:var(--red);">864</div>
+        </div>
+        <div class="stat">
+          <div class="s-lbl">Q (кДж)</div>
+          <div class="s-val" id="heat-kj" style="color:var(--amber);">0.86</div>
+        </div>
+        <div class="stat">
+          <div class="s-lbl">Материал ρ</div>
+          <div class="s-val" id="rho-val" style="color:var(--purple);">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formula-grid">
+    <div class="formula-box">
+      <div class="f-lbl">Ток күші (Ом заңы)</div>
+      <div class="f-eq">I = U / R</div>
+      <div class="f-val" id="f-current">12 / 10 = 1.20 А</div>
+    </div>
+    <div class="formula-box">
+      <div class="f-lbl">Электр қуаты</div>
+      <div class="f-eq">P = U · I = I²·R</div>
+      <div class="f-val" id="f-power">14.4 Вт</div>
+    </div>
+    <div class="formula-box">
+      <div class="f-lbl">Джоуль-Ленц заңы</div>
+      <div class="f-eq">Q = I² · R · t</div>
+      <div class="f-val" id="f-heat">864 Дж</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Визуализация</div>
+    <div class="grid2">
+      <div class="canvas-wrap">
+        <canvas id="circuit" width="220" height="220"></canvas>
+        <p>Электр тізбегі</p>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="wire" width="220" height="220"></canvas>
+        <p>Өткізгіштің қызуы</p>
+      </div>
+    </div>
+    <div style="margin-top:12px;">
+      <div style="font-size:12px; color:var(--text2); margin-bottom:6px; font-weight:600;">Жылу бөліну деңгейі</div>
+      <div class="temp-bar-bg">
+        <div class="temp-bar-fill" id="heat-bar" style="width:20%; background:#60a5fa;">Суық</div>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text2); margin-top:4px;">
+        <span>Суық</span><span>Жылы</span><span>Ыстық</span><span>Өте ыстық</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-panel" id="info-box">Параметрлерді реттеңіз.</div>
+
+  <div class="panel">
+    <div class="panel-title">Материалдардың меншікті кедергісі</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Материал</th><th>ρ (Ом·м × 10⁻⁸)</th><th>Қолданылуы</th><th>Сипаты</th></tr>
+      </thead>
+      <tbody id="mat-tbody">
+        <tr data-key="copper"><td>Мыс</td><td class="hl">1.7</td><td>Электр сымдары</td><td>Өте жақсы өткізгіш</td></tr>
+        <tr data-key="iron"><td>Темір</td><td class="hl">10</td><td>Трансформаторлар</td><td>Орташа өткізгіш</td></tr>
+        <tr data-key="nichrome"><td>Нихром</td><td class="hl">110</td><td>Электр пештері</td><td>Жоғары кедергі</td></tr>
+        <tr data-key="tungsten"><td>Вольфрам</td><td class="hl">55</td><td>Шам спиралі</td><td>Жоғары балқу т-расы</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Тұрмыстық электр аспаптарының қуаты</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Аспап</th><th>Қуат (Вт)</th><th>U = 220 В, I (А)</th><th>1 сағ. жұмыс (кДж)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Шам (LED)</td><td class="hl">10</td><td class="hl">0.05</td><td class="hl">36</td></tr>
+        <tr><td>Тоңазытқыш</td><td class="hl">150</td><td class="hl">0.68</td><td class="hl">540</td></tr>
+        <tr><td>Шайнек</td><td class="hl">2000</td><td class="hl">9.1</td><td class="hl">7200</td></tr>
+        <tr><td>Кір жуғыш</td><td class="hl">2500</td><td class="hl">11.4</td><td class="hl">9000</td></tr>
+        <tr><td>Электр пеші</td><td class="hl">3000</td><td class="hl">13.6</td><td class="hl">10800</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+<footer>8-сынып Физика · Виртуалды зертхана · Q = I²·R·t · P = U·I · A = U·I·t</footer>
+
+<script>
+const materials = {
+  nichrome: { name:'Нихром',   rho:'110 × 10⁻⁸', color:'#f87171', glow:'#ff4444' },
+  copper:   { name:'Мыс',      rho:'1.7 × 10⁻⁸',  color:'#fbbf24', glow:'#ffaa00' },
+  iron:     { name:'Темір',    rho:'10 × 10⁻⁸',   color:'#94a3b8', glow:'#cc8800' },
+  tungsten: { name:'Вольфрам', rho:'55 × 10⁻⁸',   color:'#c084fc', glow:'#ff6600' },
+};
+
+let currentMat = 'nichrome';
+let electrons = [];
+let animId;
+
+function setMaterial(key) {
+  currentMat = key;
+  document.querySelectorAll('.material-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('#mat-tbody tr').forEach(r => r.classList.toggle('active-row', r.dataset.key === key));
+  update();
+}
+
+function initElectrons() {
+  electrons = Array.from({length: 20}, (_, i) => ({
+    x: 30 + (i / 20) * 160,
+    y: 110,
+    speed: 0
+  }));
+}
+initElectrons();
+
+function update() {
+  const U = parseInt(document.getElementById('voltage').value);
+  const R = parseInt(document.getElementById('resistance').value);
+  const t = parseInt(document.getElementById('time').value);
+  const mat = materials[currentMat];
+
+  const I = Math.round((U / R) * 100) / 100;
+  const P = Math.round(U * I * 10) / 10;
+  const A = Math.round(U * I * t);
+  const Q = Math.round(I * I * R * t);
+
+  document.getElementById('v-out').textContent = U + ' В';
+  document.getElementById('r-out').textContent = R + ' Ом';
+  document.getElementById('t-out').textContent = t + ' с';
+  document.getElementById('current').textContent = I.toFixed(2);
+  document.getElementById('power').textContent = P;
+  document.getElementById('work').textContent = A;
+  document.getElementById('heat').textContent = Q;
+  document.getElementById('heat-kj').textContent = (Q / 1000).toFixed(2);
+  document.getElementById('rho-val').textContent = mat.rho;
+
+  document.getElementById('f-current').textContent = U + ' / ' + R + ' = ' + I.toFixed(2) + ' А';
+  document.getElementById('f-power').textContent = U + ' × ' + I.toFixed(2) + ' = ' + P + ' Вт';
+  document.getElementById('f-heat').textContent = I.toFixed(2) + '² × ' + R + ' × ' + t + ' = ' + Q + ' Дж';
+
+  const heatLevel = Math.min(100, Math.round(P / 30 * 100));
+  const bar = document.getElementById('heat-bar');
+  bar.style.width = Math.max(5, heatLevel) + '%';
+  if (heatLevel < 25) { bar.style.background = '#60a5fa'; bar.textContent = 'Суық'; }
+  else if (heatLevel < 50) { bar.style.background = '#fbbf24'; bar.textContent = 'Жылы'; }
+  else if (heatLevel < 75) { bar.style.background = '#f97316'; bar.textContent = 'Ыстық'; }
+  else { bar.style.background = '#ef4444'; bar.textContent = 'Өте ыстық!'; }
+
+  document.getElementById('info-box').innerHTML =
+    `<strong>${mat.name}</strong> өткізгіші арқылы U = ${U} В кернеуде I = <strong>${I.toFixed(2)} А</strong> ток өтеді. Қуат P = <strong>${P} Вт</strong>. ${t} секундта Джоуль-Ленц заңы бойынша <strong>Q = I²·R·t = ${Q} Дж</strong> жылу бөлінеді. Жұмыс A = U·I·t = <strong>${A} Дж</strong>.`;
+
+  electrons.forEach(e => { e.speed = I * 2; });
+  drawWire(I, P, mat);
+}
+
+function drawCircuit(U, I, P, mat) {
+  const c = document.getElementById('circuit');
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0,0,220,220);
+  ctx.fillStyle='#111827'; ctx.fillRect(0,0,220,220);
+
+  ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(30,50); ctx.lineTo(190,50);
+  ctx.lineTo(190,170); ctx.lineTo(30,170); ctx.lineTo(30,50);
+  ctx.stroke();
+
+  ctx.fillStyle='#1e3a5f'; ctx.fillRect(15,80,30,60);
+  ctx.strokeStyle='#60a5fa'; ctx.lineWidth=1.5; ctx.strokeRect(15,80,30,60);
+  ctx.fillStyle='#60a5fa'; ctx.font='bold 11px Nunito'; ctx.textAlign='center';
+  ctx.fillText('U', 30, 107);
+  ctx.fillStyle='#fbbf24'; ctx.font='10px Nunito';
+  ctx.fillText(document.getElementById('voltage').value+'В', 30, 120);
+
+  const heatNorm = Math.min(1, P / 300);
+  const r = Math.round(heatNorm * 255);
+  const b = Math.round((1-heatNorm) * 100);
+  ctx.fillStyle = `rgb(${r},${Math.round(50+heatNorm*50)},${b})`;
+  ctx.fillRect(80,35,60,30);
+  ctx.strokeStyle = mat.color; ctx.lineWidth=1.5; ctx.strokeRect(80,35,60,30);
+  ctx.fillStyle='#fff'; ctx.font='bold 11px Nunito'; ctx.textAlign='center';
+  ctx.fillText('R = ' + document.getElementById('resistance').value, 110, 52);
+  ctx.fillStyle=mat.color; ctx.font='10px Nunito';
+  ctx.fillText(mat.name, 110, 35);
+
+  ctx.fillStyle='#1c2333'; ctx.fillRect(80,155,60,30);
+  ctx.strokeStyle='#8896aa'; ctx.lineWidth=1; ctx.strokeRect(80,155,60,30);
+  ctx.fillStyle='#8896aa'; ctx.font='bold 10px Nunito'; ctx.textAlign='center';
+  ctx.fillText('Амперметр', 110, 168);
+  ctx.fillStyle='#fbbf24'; ctx.font='bold 11px Nunito';
+  ctx.fillText(parseFloat(document.getElementById('current').textContent).toFixed(2) + ' А', 110, 180);
+
+  electrons.forEach((e, i) => {
+    e.x += e.speed * 0.3;
+    if (e.x > 185) { e.x = 35; e.y = 50; }
+    ctx.beginPath(); ctx.arc(e.x, e.y < 60 ? 50 : e.y > 160 ? 170 : e.y, 3, 0, Math.PI*2);
+    ctx.fillStyle = '#fbbf24'; ctx.fill();
+  });
+}
+
+function drawWire(I, P, mat) {
+  const c = document.getElementById('wire');
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0,0,220,220);
+  ctx.fillStyle='#111827'; ctx.fillRect(0,0,220,220);
+
+  const heatNorm = Math.min(1, P / 300);
+  const r = Math.round(heatNorm * 255);
+  const g = Math.round(50 + heatNorm * 30);
+  const wireColor = `rgb(${r},${g},50)`;
+
+  ctx.strokeStyle = wireColor;
+  ctx.lineWidth = 16;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(20, 110); ctx.lineTo(200, 110);
+  ctx.stroke();
+
+  ctx.strokeStyle = mat.color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(20, 110); ctx.lineTo(200, 110);
+  ctx.stroke();
+
+  if (heatNorm > 0.3) {
+    for (let i = 0; i < Math.round(heatNorm * 15); i++) {
+      const fx = 30 + Math.random() * 160;
+      const fy = 110 - 5 - Math.random() * 30;
+      ctx.beginPath();
+      ctx.moveTo(fx, 105);
+      ctx.quadraticCurveTo(fx + (Math.random()-0.5)*10, fy + 10, fx + (Math.random()-0.5)*6, fy);
+      ctx.strokeStyle = `rgba(255,${Math.round(100+Math.random()*100)},0,${0.3+Math.random()*0.4})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+  }
+
+  const tempText = heatNorm < 0.25 ? 'Суық' : heatNorm < 0.5 ? 'Жылы' : heatNorm < 0.75 ? 'Ыстық' : 'Өте ыстық!';
+  const tempColor = heatNorm < 0.25 ? '#60a5fa' : heatNorm < 0.5 ? '#fbbf24' : heatNorm < 0.75 ? '#f97316' : '#ef4444';
+  ctx.fillStyle = tempColor; ctx.font = 'bold 13px Nunito'; ctx.textAlign = 'center';
+  ctx.fillText(tempText, 110, 160);
+  ctx.fillStyle = '#8896aa'; ctx.font = '11px Nunito';
+  ctx.fillText('P = ' + P + ' Вт  |  I = ' + I.toFixed(2) + ' А', 110, 180);
+  ctx.fillText(mat.name, 110, 196);
+
+  ctx.fillStyle = '#60a5fa'; ctx.beginPath(); ctx.arc(20,110,6,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#f87171'; ctx.beginPath(); ctx.arc(200,110,6,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#8896aa'; ctx.font='10px Nunito'; ctx.textAlign='center';
+  ctx.fillText('−', 20, 130); ctx.fillText('+', 200, 130);
+}
+
+function animate() {
+  const U = parseInt(document.getElementById('voltage').value);
+  const R = parseInt(document.getElementById('resistance').value);
+  const I = U / R;
+  const P = U * I;
+  drawCircuit(U, I, P, materials[currentMat]);
+  animId = requestAnimationFrame(animate);
+}
+
+['voltage','resistance','time'].forEach(id => document.getElementById(id).addEventListener('input', update));
+document.querySelectorAll('#mat-tbody tr').forEach(r => r.classList.toggle('active-row', r.dataset.key === 'nichrome'));
+update();
+animate();
+</script>
+</body>
+</html>
